@@ -1,0 +1,24 @@
+{
+  "name": "ts-boilerplate",
+  "version": "1.0.0",
+  "main": "index.js",
+  "bin": "dist/cli.js",
+  "scripts": {
+    "start": "node --enable-source-maps dist/index.js",
+    "dev": "tsc -w",
+    "build": "tsc",
+    "cli": "node dist/cli.js"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@types/node-fetch": "^2.5.8",
+    "commander": "^7.0.0",
+    "fastify": "^3.11.0",
+    "fastify-cors": "^5.2.0",
+    "node-fetch": "^2.6.1",
+    "table": "^6.0.7"
+  },
+  "devDependencies": {
+    "@types/table": "^6.0.0"
+  }
+}
