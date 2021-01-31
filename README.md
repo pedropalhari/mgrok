@@ -1,16 +1,51 @@
-# node-ts-boilerplate
+# Mgrok, the poor's man ngrok-like replacement (sort-of)
 
-Boilerplate for starting node.js and typescript servers already with yarn.
+Ok so, I like openning reverse tunnels, I really like what `ngrok` does, specially with HTTPS. 
 
-_Current Node version targeted, v14+._
+A Record, hostname *.mgrok, server your server
+TXT Record, hostname _acme-challenge.mgrok
 
-## Installing
+```
+sudo certbot certonly \
+  --agree-tos \
+  --email pedro@palhari.dev \
+  --manual \
+  --preferred-challenges=dns \
+  -d *.mgrok.palhari.dev \
+  --server https://acme-v02.api.letsencrypt.org/directory
 
-`npx degit pedropalhari/node-ts-boilerplate my-project`
+/etc/letsencrypt/live/mgrok.palhari.dev/privkey.pem
+/etc/letsencrypt/live/mgrok.palhari.dev/fullchain.pem
 
-## Commands
+server {
+  server_name *.mgrok.palhari.dev;
 
-- `yarn start`: runs the distributed copy on `dist/index.js`
-- `yarn dev`: starts the typescript compiler on watch mode (`tsc -w`)
-  - in `tsconfig.json` you can set the properties on `outDir` and `rootDir`
-- `yarn build`: builds the code, incrementally
+  location / {
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    
+    proxy_pass http://localhost:9009;
+  }
+
+  listen 443 ssl; 
+  ssl_certificate /etc/letsencrypt/live/mgrok.palhari.dev/fullchain.pem;
+  ssl_certificate_key /etc/letsencrypt/live/mgrok.palhari.dev/privkey.pem;
+
+  include /etc/letsencrypt/options-ssl-nginx.conf; 
+  ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; 
+}
+
+server {
+  if ($host = *.mgrok.palhari.dev) {
+      return 301 https://$host$request_uri;
+  } # managed by Certbot
+
+  listen 80;
+
+  server_name *.mgrok.palhari.dev;
+  return 404; # managed by Certbot
+}
+```

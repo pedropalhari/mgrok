@@ -141,6 +141,8 @@ program
       console.log(`stdout: ${data}`);
     });
 
+    process.stdin.pipe(ssh.stdin);
+
     ssh.stderr.on("data", (data) => {
       console.error(`stderr: ${data}`);
     });

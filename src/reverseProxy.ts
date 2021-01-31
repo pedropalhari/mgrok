@@ -21,17 +21,22 @@ type FastifyRes = FastifyReply<
 >;
 
 async function proxy(req: FastifyReq, res: FastifyRes) {
-  let { port } = req.params as { port: string };
-  let restOfUrl = req.url
-    .split("/")
-    .filter((_, i) => i > 1)
-    .join("/");
+  console.log("here", req.hostname);
+  let port = req.hostname.split(".")[0];
 
-  if (restOfUrl !== "") {
-    restOfUrl = `/${restOfUrl}`;
-  }
+  // req.params as { port: string };
+  // let restOfUrl = req.url
+  //   .split("/")
+  //   .filter((_, i) => i > 1)
+  //   .join("/");
 
-  let response = await fetch(`http://localhost:${port}${restOfUrl}`, {
+  // if (restOfUrl !== "") {
+  //   restOfUrl = `/${restOfUrl}`;
+  // }
+
+  console.log({ port });
+
+  let response = await fetch(`http://localhost:${port}${req.url}`, {
     method: req.method,
     headers: {
       ...req.headers,
@@ -46,6 +51,7 @@ async function proxy(req: FastifyReq, res: FastifyRes) {
   res.send(response.body);
 }
 
+app.all("/", proxy);
 app.all("/:port", proxy);
 app.all("/:port/*", proxy);
 

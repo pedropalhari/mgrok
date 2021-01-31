@@ -6,7 +6,7 @@
     "mgrok": "dist/cli.js"
   },
   "scripts": {
-    "start": "node --enable-source-maps dist/index.js",
+    "start": "node --enable-source-maps dist/reverseProxy.js",
     "dev": "tsc -w",
     "build": "tsc",
     "cli": "node dist/cli.js"

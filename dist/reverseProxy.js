@@ -9,15 +9,18 @@ const node_fetch_1 = __importDefault(require("node-fetch"));
 const app = fastify_1.default();
 app.register(fastify_cors_1.default);
 async function proxy(req, res) {
-    let { port } = req.params;
-    let restOfUrl = req.url
-        .split("/")
-        .filter((_, i) => i > 1)
-        .join("/");
-    if (restOfUrl !== "") {
-        restOfUrl = `/${restOfUrl}`;
-    }
-    let response = await node_fetch_1.default(`http://localhost:${port}${restOfUrl}`, {
+    console.log("here", req.hostname);
+    let port = req.hostname.split(".")[0];
+    // req.params as { port: string };
+    // let restOfUrl = req.url
+    //   .split("/")
+    //   .filter((_, i) => i > 1)
+    //   .join("/");
+    // if (restOfUrl !== "") {
+    //   restOfUrl = `/${restOfUrl}`;
+    // }
+    console.log({ port });
+    let response = await node_fetch_1.default(`http://localhost:${port}${req.url}`, {
         method: req.method,
         headers: {
             ...req.headers,
@@ -29,6 +32,7 @@ async function proxy(req, res) {
     });
     res.send(response.body);
 }
+app.all("/", proxy);
 app.all("/:port", proxy);
 app.all("/:port/*", proxy);
 async function main() {
