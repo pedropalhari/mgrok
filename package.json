@@ -2,7 +2,9 @@
   "name": "ts-boilerplate",
   "version": "1.0.0",
   "main": "index.js",
-  "bin": "dist/cli.js",
+  "bin": {
+    "cli": "dist/cli.js"
+  },
   "scripts": {
     "start": "node --enable-source-maps dist/index.js",
     "dev": "tsc -w",
