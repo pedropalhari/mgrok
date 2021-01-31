@@ -11,7 +11,7 @@ const path_1 = __importDefault(require("path"));
 const table_1 = require("table");
 const child_process_1 = require("child_process");
 const packageJSON = require("../package.json");
-commander_1.program.version(packageJSON.vesion);
+commander_1.program.version(packageJSON.version);
 /**
  * The CLI manages a list of entries and permits opening
  * a reverse tunnel easily
@@ -97,6 +97,8 @@ commander_1.program
     let entryToBeConnected = config.entries.find((ce) => ce.name === name);
     if (!entryToBeConnected)
         return console.log(`No entries found with name ${name}, try the 'list' command.`);
+    console.log("Connecting to:");
+    printConfigRowAsTable(entryToBeConnected);
     const ssh = child_process_1.spawn("ssh", [
         "-R",
         `${entryToBeConnected.remotePort}:localhost:${entryToBeConnected.localPort}`,

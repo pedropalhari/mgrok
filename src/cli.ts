@@ -8,7 +8,7 @@ import { table } from "table";
 import { spawn } from "child_process";
 
 const packageJSON = require("../package.json");
-program.version(packageJSON.vesion);
+program.version(packageJSON.version);
 
 /**
  * The CLI manages a list of entries and permits opening
@@ -130,6 +130,9 @@ program
       return console.log(
         `No entries found with name ${name}, try the 'list' command.`
       );
+
+    console.log("Connecting to:");
+    printConfigRowAsTable(entryToBeConnected);
 
     const ssh = spawn("ssh", [
       "-R",
